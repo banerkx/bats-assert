@@ -1,3 +1,46 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**README.md Table Of Contents**
+
+- [bats-assert](#bats-assert)
+  - [Install](#install)
+  - [Usage](#usage)
+  - [Options](#options)
+  - [Full Assertion API](#full-assertion-api)
+    - [`assert`](#assert)
+    - [`refute`](#refute)
+    - [`assert_equal`](#assert_equal)
+    - [`assert_not_equal`](#assert_not_equal)
+    - [`assert_success`](#assert_success)
+    - [`assert_failure`](#assert_failure)
+      - [Expected status](#expected-status)
+    - [`assert_output`](#assert_output)
+      - [Literal matching](#literal-matching)
+      - [Existence](#existence)
+      - [Partial matching](#partial-matching)
+      - [Regular expression matching](#regular-expression-matching)
+      - [Standard Input, HereDocs and HereStrings](#standard-input-heredocs-and-herestrings)
+    - [`refute_output`](#refute_output)
+      - [Literal matching](#literal-matching-1)
+      - [Existence](#existence-1)
+      - [Partial matching](#partial-matching-1)
+      - [Regular expression matching](#regular-expression-matching-1)
+      - [Standard Input, HereDocs and HereStrings](#standard-input-heredocs-and-herestrings-1)
+    - [`assert_line`](#assert_line)
+      - [Looking for a line in the output](#looking-for-a-line-in-the-output)
+      - [Matching a specific line](#matching-a-specific-line)
+      - [Partial matching](#partial-matching-2)
+      - [Regular expression matching](#regular-expression-matching-2)
+    - [`refute_line`](#refute_line)
+      - [Looking for a line in the output](#looking-for-a-line-in-the-output-1)
+      - [Matching a specific line](#matching-a-specific-line-1)
+      - [Partial matching](#partial-matching-3)
+      - [Regular expression matching](#regular-expression-matching-3)
+    - [`assert_regex`](#assert_regex)
+    - [`refute_regex`](#refute_regex)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # bats-assert
 
 [![License](https://img.shields.io/npm/l/bats-assert.svg)](https://github.com/bats-core/bats-assert/blob/master/LICENSE)
@@ -5,7 +48,7 @@
 [![npm release](https://img.shields.io/npm/v/bats-assert.svg)](https://www.npmjs.com/package/bats-assert)
 [![Tests](https://github.com/bats-core/bats-assert/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/bats-core/bats-assert/actions/workflows/test.yml)
 
-`bats-assert` is a helper library providing common assertions for [Bats][bats].
+`bats-assert` is a helper library providing common assertions for [Bats].
 
 - [Install](#install)
 - [Usage](#usage)
@@ -19,9 +62,6 @@ To make assertions usable outside of `@test` blocks, the output is sent to [stde
 
 The most recent invocation of Bats' `run` function is used for testing assertions on output and status code.
 
-[wikipedia-assertions]: https://en.wikipedia.org/wiki/Assertion_(software_development)
-[wikipedia-stderr]: https://en.wikipedia.org/wiki/Standard_streams#Standard_error_(stderr)
-
 ## Install
 
 This project has one dependency, for output formatting: [`bats-support`][bats-support]
@@ -32,13 +72,13 @@ Read the [shared documentation][bats-docs] to learn how to install and load both
 
 This project provides the following functions:
 
- - [assert](#assert) / [refute](#refute) Assert a given expression evaluates to `true` or `false`.
- - [assert_equal](#assert_equal) Assert two parameters are equal.
- - [assert_not_equal](#assert_not_equal) Assert two parameters are not equal.
- - [assert_success](#assert_success) / [assert_failure](#assert_failure) Assert exit status is `0` or `1`.
- - [assert_output](#assert_output) / [refute_output](#refute_output) Assert output does (or does not) contain given content.
- - [assert_line](#assert_line) / [refute_line](#refute_line) Assert a specific line of output does (or does not) contain given content.
- - [assert_regex](#assert_regex) / [refute_regex](#refute_regex) Assert a parameter does (or does not) match given pattern.
+- [assert](#assert) / [refute](#refute) Assert a given expression evaluates to `true` or `false`.
+- [assert_equal](#assert_equal) Assert two parameters are equal.
+- [assert_not_equal](#assert_not_equal) Assert two parameters are not equal.
+- [assert_success](#assert_success) / [assert_failure](#assert_failure) Assert exit status is `0` or `1`.
+- [assert_output](#assert_output) / [refute_output](#refute_output) Assert output does (or does not) contain given content.
+- [assert_line](#assert_line) / [refute_line](#refute_line) Assert a specific line of output does (or does not) contain given content.
+- [assert_regex](#assert_regex) / [refute_regex](#refute_regex) Assert a parameter does (or does not) match given pattern.
 
 These commands are described in more detail below.
 
@@ -55,7 +95,6 @@ Specifying `--` as an argument is similarly simple.
 ```bash
 refute_line -- '--'
 ```
-
 
 ## Full Assertion API
 
@@ -81,7 +120,6 @@ expression : [ 1 -lt 0 ]
 --
 ```
 
-
 ### `refute`
 
 Fail if the given expression evaluates to true.
@@ -104,7 +142,6 @@ expression : [ 1 -gt 0 ]
 --
 ```
 
-
 ### `assert_equal`
 
 Fail if the two parameters, actual and expected value respectively, do not equal.
@@ -125,7 +162,6 @@ actual   : have
 ```
 
 If either value is longer than one line both are displayed in *multi-line* format.
-
 
 ### `assert_not_equal`
 
@@ -148,7 +184,6 @@ actual     : foobar
 
 If either value is longer than one line both are displayed in *multi-line* format.
 
-
 ### `assert_success`
 
 Fail if `$status` is not 0.
@@ -170,7 +205,6 @@ output : Error!
 ```
 
 If `$output` is longer than one line, it is displayed in *multi-line* format.
-
 
 ### `assert_failure`
 
@@ -215,7 +249,6 @@ output   : Error!
 ```
 
 If `$output` is longer than one line, it is displayed in *multi-line* format.
-
 
 ### `assert_output`
 
@@ -334,7 +367,6 @@ The expected output can be specified via standard input (also heredoc/herestring
 }
 ```
 
-
 ### `refute_output`
 
 This function helps to verify that a command or function produces the correct output by checking that the specified unexpected output does not match the actual output.
@@ -451,7 +483,6 @@ The unexpected output can be specified via standard input (also heredoc/herestri
 }
 ```
 
-
 ### `assert_line`
 
 Similarly to `assert_output`, this function helps to verify that a command or function produces the correct output.
@@ -462,8 +493,6 @@ This function is the logical complement of `refute_line`.
 > _**Warning**:
 > Due to a [bug in Bats][bats-93], empty lines are discarded from `${lines[@]}`,
 > causing line indices to change and preventing testing for empty lines._
-
-[bats-93]: https://github.com/sstephenson/bats/pull/93
 
 #### Looking for a line in the output
 
@@ -549,7 +578,7 @@ An error is displayed when used simultaneously.
 Regular expression matching can be enabled with the `--regexp` option (`-e` for short).
 When used, a match fails if the *extended regular expression* does not match the line being tested.
 
-> _**Note**: 
+> _**Note**:
 > As expected, the anchors `^` and `$` bind to the beginning and the end of the matched line, respectively._
 
 ```bash
@@ -574,7 +603,6 @@ An error is displayed if the specified extended regular expression is invalid.
 This option and partial matching (`--partial` or `-p`) are mutually exclusive.
 An error is displayed when used simultaneously.
 
-
 ### `refute_line`
 
 Similarly to `refute_output`, this function helps to verify that a command or function produces the correct output.
@@ -583,10 +611,8 @@ Matching can be literal (default), partial or regular expression.
 This function is the logical complement of `assert_line`.
 
 > _**Warning**:
-> Due to a [bug in Bats][bats-93], empty lines are discarded from `${lines[@]}`, 
+> Due to a [bug in Bats][bats-93], empty lines are discarded from `${lines[@]}`,
 > causing line indices to change and preventing testing for empty lines._
-
-[bats-93]: https://github.com/sstephenson/bats/pull/93
 
 #### Looking for a line in the output
 
@@ -779,10 +805,12 @@ For description of the matching behavior, refer to the documentation of the
 
 <!-- REFERENCES -->
 
-[bats]: https://github.com/bats-core/bats-core
 [bash-comp-cmd]: https://www.gnu.org/software/bash/manual/bash.html#Compound-Commands
 [bash-conditional]: https://www.gnu.org/software/bash/manual/bash.html#Conditional-Constructs
-
+[bats]: https://github.com/bats-core/bats-core
+[bats-93]: https://github.com/sstephenson/bats/pull/93
 [bats-docs]: https://bats-core.readthedocs.io/
-[bats-support-output]: https://github.com/bats-core/bats-support#output-formatting
 [bats-support]: https://github.com/bats-core/bats-support
+[bats-support-output]: https://github.com/bats-core/bats-support#output-formatting
+[wikipedia-assertions]: https://en.wikipedia.org/wiki/Assertion_(software_development)
+[wikipedia-stderr]: https://en.wikipedia.org/wiki/Standard_streams#Standard_error_(stderr)
