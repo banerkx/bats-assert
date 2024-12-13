@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 # refute_line
 # ===========
 #
@@ -7,7 +9,7 @@
 #
 # Options:
 #   -n, --index <idx> Match the <idx>th line
-#   -p, --partial     Match if `unexpected` is a substring of `$output` or line <idx>
+#   -p, --partial     Match if `unexpected` is a substring of `${output}` or line <idx>
 #   -e, --regexp      Treat `unexpected` as an extended regular expression
 #   <unexpected>      The unexpected line string, substring, or regular expression.
 #
@@ -129,7 +131,7 @@
 #   line   : Foobar v0.1.0
 #   --
 #   ```
-# FIXME(ztombol): Display `${lines[@]}' instead of `$output'!
+# FIXME(ztombol): Display `${lines[@]}' instead of `${output}'!
 refute_line() {
   local -i is_match_line=0
   local -i is_mode_partial=0
@@ -167,8 +169,8 @@ refute_line() {
   # Arguments.
   local -r unexpected="$1"
 
-  if (( is_mode_regexp == 1 )) && [[ '' =~ $unexpected ]] || (( $? == 2 )); then
-    echo "Invalid extended regular expression: \`$unexpected'" \
+  if (( is_mode_regexp == 1 )) && [[ '' =~ ${unexpected} ]] || (( $? == 2 )); then
+    echo "Invalid extended regular expression: \`${unexpected}'" \
     | batslib_decorate 'ERROR: refute_line' \
     | fail
     return $?
@@ -178,28 +180,28 @@ refute_line() {
   if (( is_match_line )); then
     # Specific line.
     if (( is_mode_regexp )); then
-      if [[ ${lines[$idx]} =~ $unexpected ]]; then
+      if [[ ${lines[${idx}]} =~ ${unexpected} ]]; then
         batslib_print_kv_single 6 \
-        'index' "$idx" \
-        'regexp' "$unexpected" \
-        'line'  "${lines[$idx]}" \
+        'index' "${idx}" \
+        'regexp' "${unexpected}" \
+        'line'  "${lines[${idx}]}" \
         | batslib_decorate 'regular expression should not match line' \
         | fail
       fi
     elif (( is_mode_partial )); then
-      if [[ ${lines[$idx]} == *"$unexpected"* ]]; then
+      if [[ ${lines[${idx}]} == *"${unexpected}"* ]]; then
         batslib_print_kv_single 9 \
-        'index'     "$idx" \
-        'substring' "$unexpected" \
-        'line'      "${lines[$idx]}" \
+        'index'     "${idx}" \
+        'substring' "${unexpected}" \
+        'line'      "${lines[${idx}]}" \
         | batslib_decorate 'line should not contain substring' \
         | fail
       fi
     else
-      if [[ ${lines[$idx]} == "$unexpected" ]]; then
+      if [[ ${lines[${idx}]} == "${unexpected}" ]]; then
         batslib_print_kv_single 5 \
-        'index' "$idx" \
-        'line'  "${lines[$idx]}" \
+        'index' "${idx}" \
+        'line'  "${lines[${idx}]}" \
         | batslib_decorate 'line should differ' \
         | fail
       fi
@@ -209,15 +211,15 @@ refute_line() {
     if (( is_mode_regexp )); then
       local -i idx
       for (( idx = 0; idx < ${#lines[@]}; ++idx )); do
-        if [[ ${lines[$idx]} =~ $unexpected ]]; then
-          { local -ar single=( 'regexp' "$unexpected" 'index' "$idx" )
-            local -a may_be_multi=( 'output' "$output" )
+        if [[ ${lines[${idx}]} =~ ${unexpected} ]]; then
+          { local -ar single=( 'regexp' "${unexpected}" 'index' "${idx}" )
+            local -a may_be_multi=( 'output' "${output}" )
             local -ir width="$( batslib_get_max_single_line_key_width "${single[@]}" "${may_be_multi[@]}" )"
-            batslib_print_kv_single "$width" "${single[@]}"
+            batslib_print_kv_single "${width}" "${single[@]}"
             if batslib_is_single_line "${may_be_multi[1]}"; then
-              batslib_print_kv_single "$width" "${may_be_multi[@]}"
+              batslib_print_kv_single "${width}" "${may_be_multi[@]}"
             else
-              may_be_multi[1]="$( printf '%s' "${may_be_multi[1]}" | batslib_prefix | batslib_mark '>' "$idx" )"
+              may_be_multi[1]="$( printf '%s' "${may_be_multi[1]}" | batslib_prefix | batslib_mark '>' "${idx}" )"
               batslib_print_kv_multi "${may_be_multi[@]}"
             fi
           } \
@@ -229,15 +231,15 @@ refute_line() {
     elif (( is_mode_partial )); then
       local -i idx
       for (( idx = 0; idx < ${#lines[@]}; ++idx )); do
-        if [[ ${lines[$idx]} == *"$unexpected"* ]]; then
-          { local -ar single=( 'substring' "$unexpected" 'index' "$idx" )
-            local -a may_be_multi=( 'output' "$output" )
+        if [[ ${lines[${idx}]} == *"${unexpected}"* ]]; then
+          { local -ar single=( 'substring' "${unexpected}" 'index' "${idx}" )
+            local -a may_be_multi=( 'output' "${output}" )
             local -ir width="$( batslib_get_max_single_line_key_width "${single[@]}" "${may_be_multi[@]}" )"
-            batslib_print_kv_single "$width" "${single[@]}"
+            batslib_print_kv_single "${width}" "${single[@]}"
             if batslib_is_single_line "${may_be_multi[1]}"; then
-              batslib_print_kv_single "$width" "${may_be_multi[@]}"
+              batslib_print_kv_single "${width}" "${may_be_multi[@]}"
             else
-              may_be_multi[1]="$( printf '%s' "${may_be_multi[1]}" | batslib_prefix | batslib_mark '>' "$idx" )"
+              may_be_multi[1]="$( printf '%s' "${may_be_multi[1]}" | batslib_prefix | batslib_mark '>' "${idx}" )"
               batslib_print_kv_multi "${may_be_multi[@]}"
             fi
           } \
@@ -249,15 +251,15 @@ refute_line() {
     else
       local -i idx
       for (( idx = 0; idx < ${#lines[@]}; ++idx )); do
-        if [[ ${lines[$idx]} == "$unexpected" ]]; then
-          { local -ar single=( 'line' "$unexpected" 'index' "$idx" )
-            local -a may_be_multi=( 'output' "$output" )
+        if [[ ${lines[${idx}]} == "${unexpected}" ]]; then
+          { local -ar single=( 'line' "${unexpected}" 'index' "${idx}" )
+            local -a may_be_multi=( 'output' "${output}" )
             local -ir width="$( batslib_get_max_single_line_key_width "${single[@]}" "${may_be_multi[@]}" )"
-            batslib_print_kv_single "$width" "${single[@]}"
+            batslib_print_kv_single "${width}" "${single[@]}"
             if batslib_is_single_line "${may_be_multi[1]}"; then
-              batslib_print_kv_single "$width" "${may_be_multi[@]}"
+              batslib_print_kv_single "${width}" "${may_be_multi[@]}"
             else
-              may_be_multi[1]="$( printf '%s' "${may_be_multi[1]}" | batslib_prefix | batslib_mark '>' "$idx" )"
+              may_be_multi[1]="$( printf '%s' "${may_be_multi[1]}" | batslib_prefix | batslib_mark '>' "${idx}" )"
               batslib_print_kv_multi "${may_be_multi[@]}"
             fi
           } \

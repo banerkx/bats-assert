@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 # bats-assert - Common assertions for Bats
 #
 # Written in 2016 by Zoltan Tombol <zoltan dot tombol at gmail dot com>

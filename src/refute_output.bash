@@ -1,12 +1,14 @@
+# shellcheck shell=bash
+
 # refute_output
 # =============
 #
-# Summary: Fail if `$output' matches the unexpected output.
+# Summary: Fail if `${output}' matches the unexpected output.
 #
 # Usage: refute_output [-p | -e] [- | [--] <unexpected>]
 #
 # Options:
-#   -p, --partial  Match if `unexpected` is a substring of `$output`
+#   -p, --partial  Match if `unexpected` is a substring of `${output}`
 #   -e, --regexp   Treat `unexpected` as an extended regular expression
 #   -, --stdin     Read `unexpected` value from STDIN
 #   <unexpected>   The unexpected value, substring, or regular expression
@@ -29,7 +31,7 @@
 # ## Literal matching
 #
 # By default, literal matching is performed.
-# The assertion fails if `$output` equals the unexpected output.
+# The assertion fails if `${output}` equals the unexpected output.
 #
 #   ```bash
 #   @test 'refute_output()' {
@@ -78,7 +80,7 @@
 # ## Partial matching
 #
 # Partial matching can be enabled with the `--partial` option (`-p` for short).
-# When used, the assertion fails if the unexpected _substring_ is found in `$output`.
+# When used, the assertion fails if the unexpected _substring_ is found in `${output}`.
 #
 #   ```bash
 #   @test 'refute_output() partial matching' {
@@ -99,7 +101,7 @@
 # ## Regular expression matching
 #
 # Regular expression matching can be enabled with the `--regexp` option (`-e` for short).
-# When used, the assertion fails if the *extended regular expression* matches `$output`.
+# When used, the assertion fails if the *extended regular expression* matches `${output}`.
 #
 # *__Note__:
 # The anchors `^` and `$` bind to the beginning and the end (respectively) of the entire output;
@@ -157,8 +159,8 @@ refute_output() {
     unexpected="${1-}"
   fi
 
-  if (( is_mode_regexp == 1 )) && [[ '' =~ $unexpected ]] || (( $? == 2 )); then
-    echo "Invalid extended regular expression: \`$unexpected'" \
+  if (( is_mode_regexp == 1 )) && [[ '' =~ ${unexpected} ]] || (( $? == 2 )); then
+    echo "Invalid extended regular expression: \`${unexpected}'" \
     | batslib_decorate 'ERROR: refute_output' \
     | fail
     return $?
@@ -166,32 +168,32 @@ refute_output() {
 
   # Matching.
   if (( is_mode_empty )); then
-    if [ -n "$output" ]; then
+    if [ -n "${output}" ]; then
       batslib_print_kv_single_or_multi 6 \
-      'output' "$output" \
+      'output' "${output}" \
       | batslib_decorate 'output non-empty, but expected no output' \
       | fail
     fi
   elif (( is_mode_regexp )); then
-    if [[ $output =~ $unexpected ]]; then
+    if [[ ${output} =~ ${unexpected} ]]; then
       batslib_print_kv_single_or_multi 6 \
-      'regexp'  "$unexpected" \
-      'output' "$output" \
+      'regexp'  "${unexpected}" \
+      'output' "${output}" \
       | batslib_decorate 'regular expression should not match output' \
       | fail
     fi
   elif (( is_mode_partial )); then
-    if [[ $output == *"$unexpected"* ]]; then
+    if [[ ${output} == *"${unexpected}"* ]]; then
       batslib_print_kv_single_or_multi 9 \
-      'substring' "$unexpected" \
-      'output'    "$output" \
+      'substring' "${unexpected}" \
+      'output'    "${output}" \
       | batslib_decorate 'output should not contain substring' \
       | fail
     fi
   else
-    if [[ $output == "$unexpected" ]]; then
+    if [[ ${output} == "${unexpected}" ]]; then
       batslib_print_kv_single_or_multi 6 \
-      'output' "$output" \
+      'output' "${output}" \
       | batslib_decorate 'output equals, but it was expected to differ' \
       | fail
     fi

@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 # assert_failure
 # ==============
 #
@@ -10,7 +12,7 @@
 #                        If not provided, simply asserts status is != 0.
 #
 # IO:
-#   STDERR - `$output`, on failure;
+#   STDERR - `${output}`, on failure;
 #          - also, `$status` and `expected_status`, if provided
 # Globals:
 #   status
@@ -27,7 +29,7 @@
 #   }
 #   ```
 #
-# On failure, `$output` is displayed.
+# On failure, `${output}` is displayed.
 #
 #   ```
 #   -- command succeeded, but it was expected to fail --
@@ -46,7 +48,7 @@
 #   }
 #   ```
 #
-# On failure, both the expected and actual statuses, and `$output` are displayed.
+# On failure, both the expected and actual statuses, and `${output}` are displayed.
 #
 #   ```
 #   -- command failed as expected, but status differs --
@@ -61,16 +63,16 @@ assert_failure() {
 
   (( $# > 0 )) && local -r expected="$1"
   if (( status == 0 )); then
-    batslib_print_kv_single_or_multi 6 'output' "$output" \
+    batslib_print_kv_single_or_multi 6 'output' "${output}" \
     | batslib_decorate 'command succeeded, but it was expected to fail' \
     | fail
   elif (( $# > 0 )) && (( status != expected )); then
     { local -ir width=8
-      batslib_print_kv_single "$width" \
-      'expected' "$expected" \
-      'actual'   "$status"
-      batslib_print_kv_single_or_multi "$width" \
-      'output' "$output"
+      batslib_print_kv_single "${width}" \
+      'expected' "${expected}" \
+      'actual'   "${status}"
+      batslib_print_kv_single_or_multi "${width}" \
+      'output' "${output}"
     } \
     | batslib_decorate 'command failed as expected, but status differs' \
     | fail

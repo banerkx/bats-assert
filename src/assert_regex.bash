@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 # `assert_regex`
 #
 # This function is similar to `assert_equal` but uses pattern matching instead

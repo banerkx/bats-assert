@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 # assert_not_equal
 # ============
 #
