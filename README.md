@@ -15,27 +15,27 @@
     - [`assert_failure`](#assert_failure)
       - [Expected status](#expected-status)
     - [`assert_output`](#assert_output)
-      - [Literal matching](#literal-matching)
-      - [Existence](#existence)
-      - [Partial matching](#partial-matching)
-      - [Regular expression matching](#regular-expression-matching)
+      - [assert_output Literal matching](#assert_output-literal-matching)
+      - [assert_output Existence](#assert_output-existence)
+      - [assert_output Partial matching](#assert_output-partial-matching)
+      - [assert_output Regular expression matching](#assert_output-regular-expression-matching)
       - [Standard Input, HereDocs and HereStrings](#standard-input-heredocs-and-herestrings)
     - [`refute_output`](#refute_output)
-      - [Literal matching](#literal-matching-1)
-      - [Existence](#existence-1)
-      - [Partial matching](#partial-matching-1)
-      - [Regular expression matching](#regular-expression-matching-1)
-      - [Standard Input, HereDocs and HereStrings](#standard-input-heredocs-and-herestrings-1)
+      - [refute_output Literal matching](#refute_output-literal-matching)
+      - [refute_output Existence](#refute_output-existence)
+      - [refute_output Partial matching](#refute_output-partial-matching)
+      - [refute_output Regular expression matching](#refute_output-regular-expression-matching)
+      - [refute_output Standard Input, HereDocs and HereStrings](#refute_output-standard-input-heredocs-and-herestrings)
     - [`assert_line`](#assert_line)
       - [Looking for a line in the output](#looking-for-a-line-in-the-output)
       - [Matching a specific line](#matching-a-specific-line)
-      - [Partial matching](#partial-matching-2)
-      - [Regular expression matching](#regular-expression-matching-2)
+      - [Partial matching](#partial-matching)
+      - [Regular expression matching](#regular-expression-matching)
     - [`refute_line`](#refute_line)
-      - [Looking for a line in the output](#looking-for-a-line-in-the-output-1)
-      - [Matching a specific line](#matching-a-specific-line-1)
-      - [Partial matching](#partial-matching-3)
-      - [Regular expression matching](#regular-expression-matching-3)
+      - [refute_line Looking for a line in the output](#refute_line-looking-for-a-line-in-the-output)
+      - [refute_line Matching a specific line](#refute_line-matching-a-specific-line)
+      - [refute_line Partial matching](#refute_line-partial-matching)
+      - [refute_line Regular expression matching](#refute_line-regular-expression-matching)
     - [`assert_regex`](#assert_regex)
     - [`refute_regex`](#refute_regex)
 
@@ -256,7 +256,7 @@ This function helps to verify that a command or function produces the correct ou
 Matching can be literal (default), partial or regular expression.
 This function is the logical complement of `refute_output`.
 
-#### Literal matching
+#### assert_output Literal matching
 
 By default, literal matching is performed.
 The assertion fails if `$output` does not equal the expected output.
@@ -279,7 +279,7 @@ actual   : have
 
 If either value is longer than one line both are displayed in *multi-line* format.
 
-#### Existence
+#### assert_output Existence
 
 To assert that any (non-empty) output exists at all, simply omit the matching argument.
 
@@ -298,7 +298,7 @@ expected non-empty output, but output was empty
 --
 ```
 
-#### Partial matching
+#### assert_output Partial matching
 
 Partial matching can be enabled with the `--partial` option (`-p` for short).
 When used, the assertion fails if the expected *substring* is not found in `$output`.
@@ -322,7 +322,7 @@ output    : ERROR: no such file or directory
 This option and regular expression matching (`--regexp` or `-e`) are mutually exclusive.
 An error is displayed when used simultaneously.
 
-#### Regular expression matching
+#### assert_output Regular expression matching
 
 Regular expression matching can be enabled with the `--regexp` option (`-e` for short).
 When used, the assertion fails if the *extended regular expression* does not match `$output`.
@@ -373,7 +373,7 @@ This function helps to verify that a command or function produces the correct ou
 Matching can be literal (default), partial or regular expression.
 This function is the logical complement of `assert_output`.
 
-#### Literal matching
+#### refute_output Literal matching
 
 By default, literal matching is performed.
 The assertion fails if `$output` equals the unexpected output.
@@ -395,7 +395,7 @@ output : want
 
 If output is longer than one line it is displayed in *multi-line* format.
 
-#### Existence
+#### refute_output Existence
 
 To assert that there is no output at all, simply omit the matching argument.
 
@@ -414,7 +414,7 @@ expected no output, but output was non-empty
 --
 ```
 
-#### Partial matching
+#### refute_output Partial matching
 
 Partial matching can be enabled with the `--partial` option (`-p` for short).
 When used, the assertion fails if the unexpected *substring* is found in `$output`.
@@ -438,7 +438,7 @@ output    : ERROR: no such file or directory
 This option and regular expression matching (`--regexp` or `-e`) are mutually exclusive.
 An error is displayed when used simultaneously.
 
-#### Regular expression matching
+#### refute_output Regular expression matching
 
 Regular expression matching can be enabled with the `--regexp` option (`-e` for short).
 When used, the assertion fails if the *extended regular expression* matches `$output`.
@@ -467,7 +467,7 @@ An error is displayed if the specified extended regular expression is invalid.
 This option and partial matching (`--partial` or `-p`) are mutually exclusive.
 An error is displayed when used simultaneously.
 
-#### Standard Input, HereDocs and HereStrings
+#### refute_output Standard Input, HereDocs and HereStrings
 
 The unexpected output can be specified via standard input (also heredoc/herestring) with the `-`/`--stdin` option.
 
@@ -614,7 +614,7 @@ This function is the logical complement of `assert_line`.
 > Due to a [bug in Bats][bats-93], empty lines are discarded from `${lines[@]}`,
 > causing line indices to change and preventing testing for empty lines._
 
-#### Looking for a line in the output
+#### refute_line Looking for a line in the output
 
 By default, the entire output is searched for the unexpected line.
 The assertion fails if the unexpected line is found in `${lines[@]}`.
@@ -645,7 +645,7 @@ output (3 lines):
 
 If output is not longer than one line, it is displayed in *two-column* format.
 
-#### Matching a specific line
+#### refute_line Matching a specific line
 
 When the `--index <idx>` option is used (`-n <idx>` for short), the unexpected line is matched only against the line identified by the given index.
 The assertion fails if the unexpected line equals `${lines[<idx>]}`.
@@ -666,7 +666,7 @@ line  : want-1
 --
 ```
 
-#### Partial matching
+#### refute_line Partial matching
 
 Partial matching can be enabled with the `--partial` option (`-p` for short).
 When used, a match fails if the unexpected *substring* is found in the matched line.
@@ -695,7 +695,7 @@ output (3 lines):
 This option and regular expression matching (`--regexp` or `-e`) are mutually exclusive.
 An error is displayed when used simultaneously.
 
-#### Regular expression matching
+#### refute_line Regular expression matching
 
 Regular expression matching can be enabled with the `--regexp` option (`-e` for short).
 When used, a match fails if the *extended regular expression* matches the line being tested.
