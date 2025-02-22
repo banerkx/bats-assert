@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 # assert_success
 # ==============
 #
@@ -35,8 +37,8 @@ assert_success() {
 
   if (( status != 0 )); then
     { local -ir width=6
-      batslib_print_kv_single "$width" 'status' "$status"
-      batslib_print_kv_single_or_multi "$width" 'output' "$output"
+      batslib_print_kv_single "${width}" 'status' "${status}"
+      batslib_print_kv_single_or_multi "${width}" 'output' "${output}"
     } \
     | batslib_decorate 'command failed' \
     | fail

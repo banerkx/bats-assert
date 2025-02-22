@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 # `refute_regex`
 #
 # This function is similar to `refute_equal` but uses pattern matching instead
@@ -45,6 +47,8 @@ refute_regex() {
 	local -r value="${1}"
 	local -r pattern="${2}"
 
+# NOTE: ${?} does not refer to a condition.
+# shellcheck disable=SC2319
 	if [[ '' =~ ${pattern} ]] || (( ${?} == 2 )); then
 		echo "Invalid extended regular expression: \`${pattern}'" \
 		| batslib_decorate 'ERROR: refute_regex' \

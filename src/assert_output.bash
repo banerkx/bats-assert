@@ -1,12 +1,14 @@
+# shellcheck shell=bash
+
 # assert_output
 # =============
 #
-# Summary: Fail if `$output' does not match the expected output.
+# Summary: Fail if `${output}' does not match the expected output.
 #
 # Usage: assert_output [-p | -e] [- | [--] <expected>]
 #
 # Options:
-#   -p, --partial  Match if `expected` is a substring of `$output`
+#   -p, --partial  Match if `expected` is a substring of `${output}`
 #   -e, --regexp   Treat `expected` as an extended regular expression
 #   -, --stdin     Read `expected` value from STDIN
 #   <expected>     The expected value, substring or regular expression
@@ -29,7 +31,7 @@
 # ## Literal matching
 #
 # By default, literal matching is performed.
-# The assertion fails if `$output` does not equal the expected output.
+# The assertion fails if `${output}` does not equal the expected output.
 #
 #   ```bash
 #   @test 'assert_output()' {
@@ -79,7 +81,7 @@
 # ## Partial matching
 #
 # Partial matching can be enabled with the `--partial` option (`-p` for short).
-# When used, the assertion fails if the expected _substring_ is not found in `$output`.
+# When used, the assertion fails if the expected _substring_ is not found in `${output}`.
 #
 #   ```bash
 #   @test 'assert_output() partial matching' {
@@ -100,7 +102,7 @@
 # ## Regular expression matching
 #
 # Regular expression matching can be enabled with the `--regexp` option (`-e` for short).
-# When used, the assertion fails if the *extended regular expression* does not match `$output`.
+# When used, the assertion fails if the *extended regular expression* does not match `${output}`.
 #
 # *__Note__:
 # The anchors `^` and `$` bind to the beginning and the end (respectively) of the entire output;
@@ -160,36 +162,38 @@ assert_output() {
 
   # Matching.
   if (( is_mode_nonempty )); then
-    if [ -z "$output" ]; then
+    if [ -z "${output}" ]; then
       echo 'expected non-empty output, but output was empty' \
       | batslib_decorate 'no output' \
       | fail
     fi
   elif (( is_mode_regexp )); then
-    if [[ '' =~ $expected ]] || (( $? == 2 )); then
-      echo "Invalid extended regular expression: \`$expected'" \
+# NOTE: ${?} does not refer to a condition.
+# shellcheck disable=SC2319
+    if [[ '' =~ ${expected} ]] || (( ${?} == 2 )); then
+      echo "Invalid extended regular expression: \`${expected}'" \
       | batslib_decorate 'ERROR: assert_output' \
       | fail
-    elif ! [[ $output =~ $expected ]]; then
+    elif ! [[ ${output} =~ ${expected} ]]; then
       batslib_print_kv_single_or_multi 6 \
-      'regexp'  "$expected" \
-      'output' "$output" \
+      'regexp'  "${expected}" \
+      'output' "${output}" \
       | batslib_decorate 'regular expression does not match output' \
       | fail
     fi
   elif (( is_mode_partial )); then
-    if [[ $output != *"$expected"* ]]; then
+    if [[ ${output} != *"${expected}"* ]]; then
       batslib_print_kv_single_or_multi 9 \
-      'substring' "$expected" \
-      'output'    "$output" \
+      'substring' "${expected}" \
+      'output'    "${output}" \
       | batslib_decorate 'output does not contain substring' \
       | fail
     fi
   else
-    if [[ $output != "$expected" ]]; then
+    if [[ ${output} != "${expected}" ]]; then
       batslib_print_kv_single_or_multi 8 \
-      'expected' "$expected" \
-      'actual'   "$output" \
+      'expected' "${expected}" \
+      'actual'   "${output}" \
       | batslib_decorate 'output differs' \
       | fail
     fi
