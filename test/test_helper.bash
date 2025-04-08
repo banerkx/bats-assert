@@ -13,6 +13,8 @@ set -u
 : "${status:=}"
 : "${lines:=}"
 : "${output:=}"
+: "${stderr:=}"
+: "${stderr_lines:=}"
 
 assert_test_pass() {
   test "${status}" -eq 0
