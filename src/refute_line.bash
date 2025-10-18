@@ -162,6 +162,32 @@ refute_stderr_line() {
   __refute_stream_line "$@"
 }
 
+# __check_is_vvalid_regex
+# =======================
+# 
+# Summary: checks if the regex in unexpected is valid, also prints an error message if not.
+# IO: 
+#   STDERR - details, on error
+# Globals:
+#  caller - readonly
+# Returns:
+#  0 - if regex is valid
+#  1 - otherwise
+__check_is_valid_regex() { # <regex> <caller>
+  local -r regex="$1" caller="$2"
+  local error
+  error=$([[ '' =~ $regex ]] 2>&1) # capture the detailed error message on Bash >=5.3
+  if [[ $? == 2 ]]; then
+    local err_msg="Invalid extended regular expression: \`$regex'"
+    if [[ $error =~ (invalid regular expression .*) ]]; then
+      err_msg="${BASH_REMATCH[1]}"
+    fi
+    echo "$err_msg" \
+    | batslib_decorate "ERROR: ${caller}" \
+    | fail
+  fi
+}
+
 __refute_stream_line() {
   local -r caller=${FUNCNAME[1]}
   local -i is_match_line=0
@@ -216,11 +242,8 @@ Did you mean to call \`refute_line\` or \`refute_stderr_line\`?" |
   # Arguments.
   local -r unexpected="$1"
 
-  if (( is_mode_regexp == 1 )) && [[ '' =~ $unexpected ]] || (( $? == 2 )); then
-    echo "Invalid extended regular expression: \`$unexpected'" \
-    | batslib_decorate "ERROR: ${caller}" \
-    | fail
-    return $?
+  if (( is_mode_regexp == 1 )); then
+    __check_is_valid_regex "$unexpected" "$caller" || return $?
   fi
 
   # Matching.

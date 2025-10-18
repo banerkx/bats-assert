@@ -73,12 +73,22 @@ ERR_MSG
 @test "assert_regex() <value> <pattern>: returns 1 and displays an error message if <pattern> is not a valid extended regular expression" {
   run assert_regex value '[.*'
 
-  assert_test_fail <<'ERR_MSG'
+  if (( BASH_VERSINFO[0] > 5 || (BASH_VERSINFO[0] == 5 && BASH_VERSINFO[1] >=3) )); then
+    [[ "$output" =~ "invalid regular expression "([^$'\n']+) ]]
+    assert_test_fail <<ERR_MSG
+
+-- ERROR: assert_regex --
+invalid regular expression ${BASH_REMATCH[1]}
+--
+ERR_MSG
+  else 
+    assert_test_fail <<'ERR_MSG'
 
 -- ERROR: assert_regex --
 Invalid extended regular expression: `[.*'
 --
 ERR_MSG
+  fi
 }
 
 @test "assert_regex allows regex matching empty string (see #53)" {

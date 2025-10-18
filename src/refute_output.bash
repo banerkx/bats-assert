@@ -206,11 +206,8 @@ __refute_stream() {
     unexpected="${1-}"
   fi
 
-  if (( is_mode_regexp == 1 )) && [[ '' =~ $unexpected ]] || (( $? == 2 )); then
-    echo "Invalid extended regular expression: \`$unexpected'" \
-    | batslib_decorate "ERROR: ${caller}" \
-    | fail
-    return $?
+  if (( is_mode_regexp == 1 )); then
+    __check_is_valid_regex "$unexpected" "$caller" || return 1
   fi
 
   # Matching.

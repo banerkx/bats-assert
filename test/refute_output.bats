@@ -198,13 +198,22 @@ ERR_MSG
 # Error handling
 @test 'refute_output() --regexp <regexp>: returns 1 and displays an error message if <regexp> is not a valid extended regular expression' {
   run refute_output --regexp '[.*'
+  if (( BASH_VERSINFO[0] > 5 || (BASH_VERSINFO[0] == 5 && BASH_VERSINFO[1] >=3) )); then
+    [[ "$output" =~ "invalid regular expression "([^$'\n']+) ]]
+    assert_test_fail <<ERR_MSG
 
-  assert_test_fail <<'ERR_MSG'
+-- ERROR: refute_output --
+invalid regular expression ${BASH_REMATCH[1]}
+--
+ERR_MSG
+  else
+    assert_test_fail <<'ERR_MSG'
 
 -- ERROR: refute_output --
 Invalid extended regular expression: `[.*'
 --
 ERR_MSG
+  fi
 }
 
 

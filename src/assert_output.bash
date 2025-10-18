@@ -220,10 +220,8 @@ Did you mean to call \`assert_output\` or \`assert_stderr\`?" |
     fi
   elif (( is_mode_regexp )); then
     # shellcheck disable=2319
-    if [[ '' =~ $expected ]] || (( $? == 2 )); then
-      echo "Invalid extended regular expression: \`$expected'" \
-      | batslib_decorate "ERROR: ${caller}" \
-      | fail
+    if ! __check_is_valid_regex "$expected" "$caller"; then
+      return 1
     elif ! [[ $stream =~ $expected ]]; then
       batslib_print_kv_single_or_multi 6 \
       'regexp'  "$expected" \
